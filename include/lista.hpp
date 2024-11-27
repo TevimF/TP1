@@ -13,12 +13,13 @@ typedef struct Pessoa{
   string endereco;
   string lorem;
 
-  void imprimir(){
-    cout << "Nome: " << nome << endl;
-    cout << "CPF: " << cpf << endl;
-    cout << "Endereço: " << endereco << endl;
-    cout << "Lorem: " << lorem << endl;
-    cout << "--------------------------------" << endl;
+  void imprimir(ofstream &arquivoSaida){
+    // se o arquivo de saída foi passado como argumento, imprime no arquivo
+    // caso contrário, imprime no terminal
+    if (arquivoSaida.good()) {
+      arquivoSaida << nome << ',' << cpf << ',' << endereco << endl;
+    }
+    else cout << nome << ',' << cpf << ',' << endereco << endl;
   }
 } Pessoa;
 

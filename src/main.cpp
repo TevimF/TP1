@@ -10,14 +10,16 @@ using namespace std;
 
 
 bool validarArgumentos(int argc, char *argv[]) {
-  if (argc != 3) {
+  if (argc < 2) {
     cerr << "Erro: Número incorreto de argumentos." << endl;
-    cerr << "Uso: " << argv[0] << " <arquivo_entrada.csv> <arquivo_saida.txt>" << endl;
+    cerr << "Uso: " << argv[0] << " <arquivo_entrada.csv> <arquivo_saida.txt>(opcional)" << endl;
     return false;
   }
 
   return true;
 }
+
+
 
 int main(int argc, char *argv[]) {
   if (!validarArgumentos(argc, argv)) {
@@ -28,14 +30,13 @@ int main(int argc, char *argv[]) {
 
   Lista_dados lista;
   string diretorio = "../data/";
-  // busca o arquivo de entrada
 
+  // busca o arquivo de entrada
   ifstream arquivoEntrada(diretorio + argv[1]);
   if (!arquivoEntrada.good()) {
     cerr << "Erro: Arquivo de entrada não encontrado: " << argv[1] << endl;
     return false;
   }
-
 
   // lê o arquivo de entrada
   int campos;
@@ -50,6 +51,7 @@ int main(int argc, char *argv[]) {
     arquivoEntrada.close();
     return 1;
   }
+
   // debug
   // cout << "Quantidade de campos: " << campos << endl;
   
@@ -95,9 +97,9 @@ int main(int argc, char *argv[]) {
   dupla cpf[quantindade_linhas];
   dupla endereco[quantindade_linhas];
 
-  // Começa o preenchimento dos dados de pessoas
   // debug
-  cout << "Começando a leitura dos dados..." << endl;
+  // cout << "Começando a leitura dos dados..." << endl;
+  // Começa o preenchimento dos dados de pessoas
   for (int i = 0; i < quantindade_linhas; i++) {
     Pessoa pessoa;
   
@@ -106,14 +108,17 @@ int main(int argc, char *argv[]) {
     getline(arquivoEntrada, temp, ',');
     pessoa.nome = temp;
     nome[i].index = temp;
+
     //cpf
     getline(arquivoEntrada, temp, ',');  
     strcpy(pessoa.cpf, temp.c_str());
     cpf[i].index = temp;
+
     //endereco
     getline(arquivoEntrada, temp, ',');
     pessoa.endereco = temp;
     endereco[i].index = temp;
+
     //lorem 
     getline(arquivoEntrada, temp);
     pessoa.lorem = temp;
@@ -124,21 +129,30 @@ int main(int argc, char *argv[]) {
     endereco[i].ponteiro = var;
   }
   //debug
-  cout << "Dados lidos com sucesso!" << endl;
+  // cout << "Dados lidos com sucesso!" << endl;
 
+  // inicia o arquivo de saída como nulo caso não seja passado como argumento
+  ofstream arquivoSaida(nullptr);
+  if (argv[2] != nullptr) {
+    ofstream arquivoSaida(diretorio + argv[2]);
+    if (!arquivoSaida.good()) {
+      cerr << "Erro: Falha ao abrir o arquivo de saída: " << argv[2] << endl;
+      return 1;
+    }
+  }
 
   // ordena cada vetor de duplas de acordo com o index
-  Ordenacao(nome, quantindade_linhas, 0);
-  Ordenacao(cpf, quantindade_linhas, 1);
-  Ordenacao(endereco, quantindade_linhas, 2);
+  Ordenar(nome, quantindade_linhas, 0);
+  Ordenar(cpf, quantindade_linhas, 1);
+  Ordenar(endereco, quantindade_linhas, 2);
+  
+  // imprime os dados ordenados
+  // se o arquivo de saída não foi passado como argumento, imprime no terminal
+  imprimeVetor(nome, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+  imprimeVetor(cpf, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+  imprimeVetor(endereco, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
 
 
-
-  // imprime os 3 vetores ordenados
-
-
-    
-    
   // fecha arquivo
   arquivoEntrada.close();
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include "lista.hpp"
 
@@ -13,5 +14,8 @@ struct dupla
 };
 
 // tipo 1 = nome, 2 = cpf, 3 = endereco
-void Ordenacao(dupla *vetor, int tamanho, int tipo);
-void imprimeVetor(dupla *vetor, int tamanho, int tipo);
+void Ordenar(dupla *vetor, int tamanho, int tipo);
+
+void imprimirParametros(ofstream &arquivoSaida, int campos, string colunas[], int quantindade_linhas);
+
+void imprimeVetor(dupla *vetor, int tamanho,ofstream &arquivoSaida, int campos, string colunas[], int quantindade_linhas);
