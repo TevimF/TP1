@@ -13,8 +13,13 @@ struct dupla
   Pessoa *ponteiro;
 };
 
-// tipo 1 = nome, 2 = cpf, 3 = endereco
+// 0 quick 1 merge 2 radix
 void Ordenar(dupla *vetor, int tamanho, int tipo);
+
+void quicksort(dupla *vetor, int tamanho);
+void mergesort(dupla *vetor,int tamanho);
+void radix(dupla *vetor,int tamanho);
+int media3(string a, string b, string c);
 
 void imprimirParametros(ofstream &arquivoSaida, int campos, string colunas[], int quantindade_linhas);
 

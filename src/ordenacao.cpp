@@ -1,16 +1,16 @@
 #include "../include/ordenacao.hpp"
 
-// tipo 1 = nome, 2 = cpf, 3 = endereco
+// 0 quick 1 merge 2 radix
 void Ordenar(dupla *vetor, int tamanho, int tipo){
   cout << "Ordenando tipo "<< tipo << "..." << endl;
   if (tipo == 0) {
-    //quicksort(vetor, tamanho);
+    quicksort(vetor, tamanho);
   }
   else if (tipo == 1) {
-    //mergesort(vetor, tamanho);
+    mergesort(vetor, tamanho);
   }
   else if (tipo == 2) {
-    //radix(vetor, tamanho);
+    radix(vetor, tamanho);
   }
 }
 
@@ -29,4 +29,10 @@ void imprimeVetor(dupla *vetor, int tamanho, ofstream &arquivoSaida, int campos,
     vetor[i].ponteiro->imprimir(arquivoSaida);
     i++;
   }
+}
+
+void quicksort(dupla *vetor, int tamanho){
+  int pivo;
+  media3(vetor[0].index, vetor[tamanho/2].index, vetor[tamanho-1].index);
+
 }
