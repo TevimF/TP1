@@ -19,7 +19,7 @@ void Ordenar(dupla *vetor, int tamanho, int tipo);
 void quicksort(dupla *vetor, int tamanho);
 void mergesort(dupla *vetor,int tamanho);
 void radix(dupla *vetor,int tamanho);
-int media3(string a, string b, string c);
+string string_media(string a, string b, string c);
 
 void imprimirParametros(ofstream &arquivoSaida, int campos, string colunas[], int quantindade_linhas);
 

@@ -32,7 +32,20 @@ void imprimeVetor(dupla *vetor, int tamanho, ofstream &arquivoSaida, int campos,
 }
 
 void quicksort(dupla *vetor, int tamanho){
-  int pivo;
-  media3(vetor[0].index, vetor[tamanho/2].index, vetor[tamanho-1].index);
+  string pivo;
+  pivo = string_media(vetor[0].index, vetor[tamanho/2].index, vetor[tamanho-1].index);
+  
+  }
 
+}
+
+// retorna nem a maior nem a menor string para ser um bom pivo
+string string_media(string a, string b, string c) {
+    if ((a <= b && b <= c) || (c <= b && b <= a)) {
+        return b;
+    } else if ((b <= a && a <= c) || (c <= a && a <= b)) {
+        return a;
+    } else {
+        return c;
+    }
 }
