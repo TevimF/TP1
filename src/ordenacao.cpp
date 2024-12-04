@@ -4,6 +4,9 @@
 void Ordenar(dupla *vetor, int tamanho, int tipo_ord){
   if (tipo_ord == 0) {
     quicksort(vetor, 0, tamanho - 1);
+    //debug
+    // cout << (vetor[0].ponteiro->endereco < vetor[1].ponteiro->endereco ? "true" : "false") << endl;
+    // cout << vetor[0].ponteiro->endereco << "<" << vetor[1].ponteiro->endereco << endl;
   }
   else if (tipo_ord == 1) {
     dupla *vetor_aux = new dupla[tamanho];
@@ -15,31 +18,27 @@ void Ordenar(dupla *vetor, int tamanho, int tipo_ord){
   }
 }
 
+
 void quicksort(dupla *vetor, int inicio, int fim) {
-  if (inicio < fim) {
+  if (fim > inicio) {
     int indice = particionar(vetor, inicio, fim);
-    quicksort(vetor, inicio, indice);
+    quicksort(vetor, inicio, indice-1);
     quicksort(vetor, indice+1, fim);
   }
 }
 
 int particionar(dupla *vetor, int inicio, int fim) {
-  const string& pivo = vetor[(inicio+fim)/2].index;
-  int i = inicio - 1;
-  int j = fim + 1;
+  string pivo = vetor[fim].index;
+  int i = inicio -1;
 
-  while (i < j) { 
-    do {
+  for (int j = inicio; j < fim; j++) {
+    if (vetor[j].index <= pivo) {
       i++;
-    } while (i <= fim && vetor[i].index < pivo); 
-    do {
-      j--;
-    } while (j >= inicio && vetor[j].index > pivo);
-    if (i < j) { 
       swap(vetor[i], vetor[j]);
     }
-}
-  return j; // Retorna o índice do pivô
+  }
+  swap(vetor[i + 1], vetor[fim]);
+  return i + 1;
 }
 
 void imprimirParametros(ostream &saida, int campos, string colunas[], int quantindade_linhas) {

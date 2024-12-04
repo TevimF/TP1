@@ -15,13 +15,14 @@ bool validarArgumentos(int argc, char *argv[]) {
     cerr << "Uso: " << argv[0] << " <arquivo_entrada.csv> <arquivo_saida.txt>(opcional)" << endl;
     return false;
   }
-
   return true;
 }
 
 
 
 int main(int argc, char *argv[]) {
+  // semente para gerar números aleatórios
+  srand(time(NULL));
 
   if (!validarArgumentos(argc, argv)) {
     return 1;
@@ -124,7 +125,7 @@ int main(int argc, char *argv[]) {
 
     //cpf
     getline(arquivoEntrada, temp, ',');  
-    strcpy(pessoa.cpf, temp.c_str());
+    pessoa.cpf = temp;
     cpf[i].index = temp;
 
     //endereco
@@ -178,6 +179,8 @@ int main(int argc, char *argv[]) {
   imprimeVetor(nome, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
   imprimeVetor(cpf, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
   imprimeVetor(endereco, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+ 
+  
 
   // ordenar por shellsort
   Ordenar(nome, quantindade_linhas, 2);
@@ -186,6 +189,8 @@ int main(int argc, char *argv[]) {
   imprimeVetor(nome, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
   imprimeVetor(cpf, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
   imprimeVetor(endereco, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+  
+  
 
   
 
