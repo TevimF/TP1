@@ -17,9 +17,9 @@ typedef struct Pessoa{
     // se o arquivo de saída foi passado como argumento, imprime no arquivo
     // caso contrário, imprime no terminal
     if (arquivoSaida.good()) {
-      arquivoSaida << nome << ',' << cpf << ',' << endereco << endl;
+      arquivoSaida << nome << ',' << cpf << ',' << endereco << ',' << lorem << endl;
     }
-    else cout << nome << ',' << cpf << ',' << endereco << endl;
+    else cout << nome << ',' << cpf << ',' << endereco << ',' << lorem << endl;
   }
 } Pessoa;
 

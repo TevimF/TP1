@@ -22,6 +22,7 @@ bool validarArgumentos(int argc, char *argv[]) {
 
 
 int main(int argc, char *argv[]) {
+
   if (!validarArgumentos(argc, argv)) {
     return 1;
   }
@@ -34,8 +35,16 @@ int main(int argc, char *argv[]) {
   // busca o arquivo de entrada
   ifstream arquivoEntrada(diretorio + argv[1]);
   if (!arquivoEntrada.good()) {
-    cerr << "Erro: Arquivo de entrada não encontrado: " << argv[1] << endl;
-    return false;
+    try {
+      arquivoEntrada.open(argv[1]);
+      if (!arquivoEntrada.good()) {
+        throw runtime_error("Erro: Falha ao abrir o arquivo de entrada: " + string(argv[1]));
+      }
+    }
+    catch (const runtime_error& e) {
+      cerr << e.what() << endl;
+      return 1;
+    }
   }
 
   // lê o arquivo de entrada
@@ -90,7 +99,7 @@ int main(int argc, char *argv[]) {
   }
 
   // debug
-  cout << "Quantidade de linhas: " << quantindade_linhas << endl;
+  // cout << "Quantidade de linhas: " << quantindade_linhas << endl;
   
   // Criação de vetores para ordenar indiretamente os dados
   dupla nome[quantindade_linhas];
@@ -100,10 +109,14 @@ int main(int argc, char *argv[]) {
   // debug
   // cout << "Começando a leitura dos dados..." << endl;
   // Começa o preenchimento dos dados de pessoas
+  
+  // ** solução para o problema de leitura de strings com endl **
+  string temp;
+  getline(arquivoEntrada, temp);
+
   for (int i = 0; i < quantindade_linhas; i++) {
     Pessoa pessoa;
-  
-    string temp;
+
     //nome
     getline(arquivoEntrada, temp, ',');
     pessoa.nome = temp;
@@ -133,25 +146,48 @@ int main(int argc, char *argv[]) {
 
   // inicia o arquivo de saída como nulo caso não seja passado como argumento
   ofstream arquivoSaida(nullptr);
-  if (argv[2] != nullptr) {
-    ofstream arquivoSaida(diretorio + argv[2]);
+
+  if (argc > 2 && argv[2] != nullptr) {
+    // se o arquivo de saída foi passado como argumento, tenta abrir o arquivo
+    arquivoSaida.open(diretorio + argv[2]);
     if (!arquivoSaida.good()) {
-      cerr << "Erro: Falha ao abrir o arquivo de saída: " << argv[2] << endl;
-      return 1;
+      // se o arquivo não existe, cria um novo arquivo com o nome passado
+      arquivoSaida.clear(); // limpa o estado de erro
+      arquivoSaida.open(diretorio + argv[2], ios::out);
+      if (!arquivoSaida.good()) {
+        cerr << "Erro: Falha ao criar o arquivo de saída: " << argv[2] << endl;
+        return 1;
+      }
     }
-  }
+}
 
   // ordena cada vetor de duplas de acordo com o index
+  // ordenar por quicksort
   Ordenar(nome, quantindade_linhas, 0);
-  Ordenar(cpf, quantindade_linhas, 1);
-  Ordenar(endereco, quantindade_linhas, 2);
-  
-  // imprime os dados ordenados
+  Ordenar(cpf, quantindade_linhas, 0);
+  Ordenar(endereco, quantindade_linhas, 0);
   // se o arquivo de saída não foi passado como argumento, imprime no terminal
   imprimeVetor(nome, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
   imprimeVetor(cpf, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
   imprimeVetor(endereco, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
 
+  // ordenar por mergesort
+  Ordenar(nome, quantindade_linhas, 1);
+  Ordenar(cpf, quantindade_linhas, 1);
+  Ordenar(endereco, quantindade_linhas, 1);
+  imprimeVetor(nome, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+  imprimeVetor(cpf, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+  imprimeVetor(endereco, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+
+  // ordenar por shellsort
+  Ordenar(nome, quantindade_linhas, 2);
+  Ordenar(cpf, quantindade_linhas, 2);
+  Ordenar(endereco, quantindade_linhas, 2);
+  imprimeVetor(nome, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+  imprimeVetor(cpf, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+  imprimeVetor(endereco, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+
+  
 
   // fecha arquivo
   arquivoEntrada.close();
