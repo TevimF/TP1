@@ -4,13 +4,13 @@
 #include <string>
 #include <cstring>
 
+#include "../include/memlog.hpp"
 #include "../include/lista.hpp"
 #include "../include/ordenacao.hpp"
 using namespace std;
 
-
 bool validarArgumentos(int argc, char *argv[]) {
-  if (argc < 2) {
+  if (argc < 2 || argc > 3) {
     cerr << "Erro: Número incorreto de argumentos." << endl;
     cerr << "Uso: " << argv[0] << " <arquivo_entrada.csv> <arquivo_saida.txt>(opcional)" << endl;
     return false;
@@ -18,9 +18,23 @@ bool validarArgumentos(int argc, char *argv[]) {
   return true;
 }
 
-
+void ordenaEImprime(dupla* nome, dupla* cpf, dupla* endereco, int quantidade_linhas, ofstream& arquivoSaida, int campos, string colunas[], int tipo) {
+  // ordena cada vetor de duplas de acordo com o index
+  // ordenar por quicksort
+  ativaMemLog();
+  Ordenar(nome, quantidade_linhas, tipo);
+  Ordenar(cpf, quantidade_linhas, tipo);
+  Ordenar(endereco, quantidade_linhas, tipo);
+  // se o arquivo de saída não foi passado como argumento, imprime no terminal
+  desativaMemLog();
+  imprimeVetor(nome, quantidade_linhas, arquivoSaida, campos, colunas, quantidade_linhas);
+  imprimeVetor(cpf, quantidade_linhas, arquivoSaida, campos, colunas, quantidade_linhas);
+  imprimeVetor(endereco, quantidade_linhas, arquivoSaida, campos, colunas, quantidade_linhas);
+}
 
 int main(int argc, char *argv[]) {
+  iniciaMemLog("memlog.txt");
+
   // semente para gerar números aleatórios
   srand(time(NULL));
 
@@ -104,8 +118,11 @@ int main(int argc, char *argv[]) {
   
   // Criação de vetores para ordenar indiretamente os dados
   dupla nome[quantindade_linhas];
+  ESCREVEMEMLOG((long int)nome, sizeof(dupla) * quantindade_linhas, 0);
   dupla cpf[quantindade_linhas];
+  ESCREVEMEMLOG((long int)cpf, sizeof(dupla) * quantindade_linhas, 0);
   dupla endereco[quantindade_linhas];
+  ESCREVEMEMLOG((long int)endereco, sizeof(dupla) * quantindade_linhas, 0);
 
   // debug
   // cout << "Começando a leitura dos dados..." << endl;
@@ -122,16 +139,19 @@ int main(int argc, char *argv[]) {
     getline(arquivoEntrada, temp, ',');
     pessoa.nome = temp;
     nome[i].index = temp;
+    ESCREVEMEMLOG((long int) &nome[i], sizeof(nome[i]), 0);
 
     //cpf
     getline(arquivoEntrada, temp, ',');  
     pessoa.cpf = temp;
     cpf[i].index = temp;
+    ESCREVEMEMLOG((long int)&cpf[i], sizeof(cpf[i]), 0);
 
     //endereco
     getline(arquivoEntrada, temp, ',');
     pessoa.endereco = temp;
     endereco[i].index = temp;
+    ESCREVEMEMLOG((long int)&endereco[i], sizeof(endereco[i]), 0);
 
     //lorem 
     getline(arquivoEntrada, temp);
@@ -147,6 +167,8 @@ int main(int argc, char *argv[]) {
 
   // inicia o arquivo de saída como nulo caso não seja passado como argumento
   ofstream arquivoSaida(nullptr);
+  //limpa a saida de erro
+  cerr.clear();
 
   if (argc > 2 && argv[2] != nullptr) {
     // se o arquivo de saída foi passado como argumento, tenta abrir o arquivo
@@ -160,43 +182,25 @@ int main(int argc, char *argv[]) {
         return 1;
       }
     }
-}
+  }
 
-  // ordena cada vetor de duplas de acordo com o index
+  int quick = 0;
+  int merge = 1;
+  int shell = 2;
+
   // ordenar por quicksort
-  Ordenar(nome, quantindade_linhas, 0);
-  Ordenar(cpf, quantindade_linhas, 0);
-  Ordenar(endereco, quantindade_linhas, 0);
-  // se o arquivo de saída não foi passado como argumento, imprime no terminal
-  imprimeVetor(nome, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
-  imprimeVetor(cpf, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
-  imprimeVetor(endereco, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+  ordenaEImprime(nome, cpf, endereco, quantindade_linhas, arquivoSaida, campos, colunas, quick);
 
   // ordenar por mergesort
-  Ordenar(nome, quantindade_linhas, 1);
-  Ordenar(cpf, quantindade_linhas, 1);
-  Ordenar(endereco, quantindade_linhas, 1);
-  imprimeVetor(nome, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
-  imprimeVetor(cpf, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
-  imprimeVetor(endereco, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+  ordenaEImprime(nome, cpf, endereco, quantindade_linhas, arquivoSaida, campos, colunas, merge);
  
-  
-
   // ordenar por shellsort
-  Ordenar(nome, quantindade_linhas, 2);
-  Ordenar(cpf, quantindade_linhas, 2);
-  Ordenar(endereco, quantindade_linhas, 2);
-  imprimeVetor(nome, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
-  imprimeVetor(cpf, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
-  imprimeVetor(endereco, quantindade_linhas, arquivoSaida, campos, colunas, quantindade_linhas);
+  ordenaEImprime(nome, cpf, endereco, quantindade_linhas, arquivoSaida, campos, colunas, shell);
   
-  
-
-  
-
   // fecha arquivo
   arquivoEntrada.close();
 
+  finalizaMemLog();
 
   return 0;
 }

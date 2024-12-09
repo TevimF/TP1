@@ -1,4 +1,5 @@
 #include "../include/lista.hpp"
+#include "../include/memlog.hpp"
 
 Lista_dados :: Lista_dados(){
   _cabeca = NULL;
@@ -20,6 +21,7 @@ Pessoa* Lista_dados::inserir(Pessoa indice){
     _cabeca = novo;
     _cauda = novo;
   } else {
+    // se nao for o primeiro elemento, insere no final
     _cauda->proximo = novo;
     _cauda = novo;
   }
